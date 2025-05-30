@@ -2,7 +2,7 @@ interface EmailTemplateProps {
   email: string
 }
 
-export function EmailTemplate({ email }: EmailTemplateProps) {
+export default function EmailTemplate({ email }: EmailTemplateProps) {
   return `
     <!DOCTYPE html>
     <html lang="en">
