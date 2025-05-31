@@ -8,23 +8,21 @@ interface FooterProps {
 export function Footer({ language }: FooterProps) {
   const content = {
     en: {
-      tagline: "Empowering UAE students to achieve academic excellence",
+      tagline: "Empowering UAE students to achieve academic excellence through smart past paper practice",
       contact: "Contact Us",
       email: "nadasaad635@gmail.com",
       phone: "+971503012964",
       address: "Abu Dhabi, UAE",
-      followUs: "Follow Us",
-      copyright: "© 2024 EssayTest. All rights reserved.",
+      copyright: "© 2024 PastToPass. All rights reserved.",
       madeWith: "Made with ❤️ for UAE students",
     },
     ar: {
-      tagline: "تمكين طلاب الإمارات لتحقيق التميز الأكاديمي",
+      tagline: "تمكين طلاب الإمارات لتحقيق التميز الأكاديمي من خلال الممارسة الذكية للأوراق السابقة",
       contact: "اتصل بنا",
       email: "nadasaad635@gmail.com",
       phone: "+971503012964",
       address: "أبو ظبي، الإمارات العربية المتحدة",
-      followUs: "تابعنا",
-      copyright: "© 2024 إيساي تست. جميع الحقوق محفوظة.",
+      copyright: "© 2024 باست تو باس. جميع الحقوق محفوظة.",
       madeWith: "صنع بـ ❤️ لطلاب الإمارات",
     },
   }
@@ -39,10 +37,10 @@ export function Footer({ language }: FooterProps) {
               className={`flex items-center space-x-3 ${language === "ar" ? "flex-row-reverse space-x-reverse" : ""}`}
             >
               <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-purple-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">E</span>
+                <span className="text-white font-bold text-lg">P</span>
               </div>
               <div>
-                <h3 className="text-xl font-bold text-white">{language === "en" ? "EssayTest" : "إيساي تست"}</h3>
+                <h3 className="text-xl font-bold text-white">{language === "en" ? "PastToPass" : "باست تو باس"}</h3>
               </div>
             </div>
             <p className={`text-blue-200 leading-relaxed ${language === "ar" ? "font-arabic" : ""}`}>

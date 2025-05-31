@@ -10,11 +10,11 @@ interface HeaderProps {
 export function Header({ language, onLanguageChange }: HeaderProps) {
   const content = {
     en: {
-      logo: "EssayTest",
+      logo: "PastToPass",
       tagline: "Smart Learning for UAE Students",
     },
     ar: {
-      logo: "إيساي تست",
+      logo: "باست تو باس",
       tagline: "التعلم الذكي لطلاب الإمارات",
     },
   }
@@ -24,7 +24,7 @@ export function Header({ language, onLanguageChange }: HeaderProps) {
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <div className={`flex items-center space-x-3 ${language === "ar" ? "flex-row-reverse space-x-reverse" : ""}`}>
           <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-purple-600 rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-lg">E</span>
+            <span className="text-white font-bold text-lg">P</span>
           </div>
           <div>
             <h1 className="text-xl font-bold text-white">{content[language].logo}</h1>

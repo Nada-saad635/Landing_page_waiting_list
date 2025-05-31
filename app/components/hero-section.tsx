@@ -7,21 +7,18 @@ interface HeroSectionProps {
 export function HeroSection({ language }: HeroSectionProps) {
   const content = {
     en: {
-      headline: "Revolutionize Your Exam Preparation",
+      headline: "Transform Past Papers Into Future Success",
       subheadline:
-        "Join thousands of UAE university students who are already acing their exams with EssayTest's smart learning platform",
+        "Join thousands of UAE university students who are mastering their exams with PastToPass - the smart way to study with past papers",
       description:
-        "Students across the Emirates are discovering a smarter way to study. Get personalized practice questions, access past exam banks, and learn with your peers.",
-      cta: "Join the Waitlist - Be Among the First",
-      secondaryCta: "Learn More About Our Mission",
+        "Access organized past exam questions, get AI-powered practice, and connect with fellow UAE students. Turn yesterday's papers into tomorrow's success.",
     },
     ar: {
-      headline: "ثورة في تحضير الامتحانات",
-      subheadline: "انضم إلى آلاف طلاب الجامعات الإماراتية الذين يتفوقون في امتحاناتهم باستخدام منصة إيساي تست الذكية",
+      headline: "حول الأوراق السابقة إلى نجاح مستقبلي",
+      subheadline:
+        "انضم إلى آلاف طلاب الجامعات الإماراتية الذين يتقنون امتحاناتهم مع باست تو باس - الطريقة الذكية للدراسة بالأوراق السابقة",
       description:
-        "يكتشف الطلاب في جميع أنحاء الإمارات طريقة أذكى للدراسة. احصل على أسئلة تدريب مخصصة، وادخل إلى بنوك الأسئلة السابقة، وتعلم مع زملائك.",
-      cta: "انضم إلى قائمة الانتظار - كن من الأوائل",
-      secondaryCta: "تعرف على مهمتنا",
+        "احصل على أسئلة الامتحانات السابقة المنظمة، والتدريب المدعوم بالذكاء الاصطناعي، وتواصل مع زملائك الطلاب الإماراتيين. حول أوراق الأمس إلى نجاح الغد.",
     },
   }
 

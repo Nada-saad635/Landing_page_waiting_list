@@ -9,12 +9,12 @@ interface ValuePropositionsProps {
 export function ValuePropositions({ language }: ValuePropositionsProps) {
   const content = {
     en: {
-      title: "Why UAE Students Choose EssayTest",
-      subtitle: "Built specifically for the unique needs of UAE university students",
+      title: "Why UAE Students Choose PastToPass",
+      subtitle: "Transform your exam preparation with organized past papers and smart learning tools",
       features: [
         {
           icon: Database,
-          title: "Smart Question Bank",
+          title: "Organized Past Papers",
           description:
             "Access thousands of past exam questions organized by subject, semester, and difficulty level from major UAE universities.",
         },
@@ -32,25 +32,25 @@ export function ValuePropositions({ language }: ValuePropositionsProps) {
         },
         {
           icon: Users,
-          title: "Crowdsourced Content",
+          title: "Student Community",
           description:
-            "Contribute and access questions shared by fellow UAE university students, creating a collaborative learning environment.",
+            "Connect with fellow UAE university students, share resources, and learn together in a collaborative environment.",
         },
         {
           icon: Globe,
-          title: "Cultural Integration",
+          title: "UAE-Focused Content",
           description:
             "Built specifically for UAE students with local university alignment, bilingual support, and cultural understanding.",
         },
       ],
     },
     ar: {
-      title: "لماذا يختار طلاب الإمارات إيساي تست",
-      subtitle: "مصمم خصيصاً لتلبية الاحتياجات الفريدة لطلاب الجامعات الإماراتية",
+      title: "لماذا يختار طلاب الإمارات باست تو باس",
+      subtitle: "حول تحضيرك للامتحانات بأوراق سابقة منظمة وأدوات تعلم ذكية",
       features: [
         {
           icon: Database,
-          title: "بنك الأسئلة الذكي",
+          title: "أوراق سابقة منظمة",
           description:
             "الوصول إلى آلاف أسئلة الامتحانات السابقة منظمة حسب المادة والفصل الدراسي ومستوى الصعوبة من الجامعات الإماراتية الرئيسية.",
         },
@@ -67,12 +67,12 @@ export function ValuePropositions({ language }: ValuePropositionsProps) {
         },
         {
           icon: Users,
-          title: "المحتوى التشاركي",
-          description: "ساهم واحصل على أسئلة مشتركة من زملائك طلاب الجامعات الإماراتية، مما يخلق بيئة تعلم تعاونية.",
+          title: "مجتمع الطلاب",
+          description: "تواصل مع زملائك طلاب الجامعات الإماراتية، وشارك الموارد، وتعلم معاً في بيئة تعاونية.",
         },
         {
           icon: Globe,
-          title: "التكامل الثقافي",
+          title: "محتوى مركز على الإمارات",
           description: "مصمم خصيصاً لطلاب الإمارات مع التوافق مع الجامعات المحلية والدعم ثنائي اللغة والفهم الثقافي.",
         },
       ],
@@ -95,7 +95,7 @@ export function ValuePropositions({ language }: ValuePropositionsProps) {
           {content[language].features.map((feature, index) => (
             <div
               key={index}
-              className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:bg-white/15 transition-all duration-300 transform hover:scale-105"
+              className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:bg-white/15 transition-all duration-300 transform hover:scale-105 cursor-pointer"
             >
               <div className={`flex items-center mb-6 ${language === "ar" ? "flex-row-reverse" : ""}`}>
                 <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-purple-600 rounded-xl flex items-center justify-center mr-4">

@@ -4,9 +4,42 @@ import { z } from "zod"
 import { createRedisClient } from "../lib/redis"
 
 const schema = z.object({
-  email: z.string().email("Invalid email address"),
+  email: z.string().email("Please enter a valid email address"),
   university: z.string().min(1, "Please select your university"),
+  name: z.string().min(2, "Please enter your full name (at least 2 characters)"),
 })
+
+// Simple email validation function
+function isValidEmailFormat(email: string): boolean {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  return emailRegex.test(email)
+}
+
+// Check if email domain exists (basic check)
+function hasValidDomain(email: string): boolean {
+  const domain = email.split("@")[1]
+  if (!domain) return false
+
+  // Common valid domains and UAE university domains
+  const validDomains = [
+    "gmail.com",
+    "yahoo.com",
+    "hotmail.com",
+    "outlook.com",
+    "icloud.com",
+    "aus.edu",
+    "uaeu.ac.ae",
+    "aud.edu",
+    "ud.ac.ae",
+    "zu.ac.ae",
+    "ku.ac.ae",
+    "adu.ac.ae",
+    "ajman.ac.ae",
+    "sharjah.ac.ae",
+  ]
+
+  return validDomains.some((validDomain) => domain.toLowerCase().includes(validDomain.toLowerCase()))
+}
 
 export async function joinEssayTestWaitlist(prevState: any, formData: FormData) {
   try {
@@ -15,83 +48,139 @@ export async function joinEssayTestWaitlist(prevState: any, formData: FormData) 
 
     const email = formData.get("email")
     const university = formData.get("university")
+    const name = formData.get("name")
 
-    if (!email || !university) {
-      return { success: false, message: "Email and university are required" }
+    if (!email || !university || !name) {
+      return { success: false, message: "Name, email and university are required" }
     }
 
-    const result = schema.safeParse({ email, university })
+    const emailStr = email.toString().toLowerCase().trim()
+    const universityStr = university.toString()
+    const nameStr = name.toString().trim()
+
+    // Validate email format
+    if (!isValidEmailFormat(emailStr)) {
+      return {
+        success: false,
+        message: "❌ Please enter a valid email address (example: student@university.edu)",
+      }
+    }
+
+    // Check for common typos in email domains
+    const commonTypos = ["gmial.com", "gmai.com", "yahooo.com", "hotmial.com"]
+    const domain = emailStr.split("@")[1]
+    if (commonTypos.includes(domain)) {
+      return {
+        success: false,
+        message: "❌ Please check your email address - it looks like there might be a typo in the domain",
+      }
+    }
+
+    const result = schema.safeParse({ email: emailStr, university: universityStr, name: nameStr })
 
     if (!result.success) {
       return { success: false, message: result.error.errors[0].message }
     }
 
-    const emailStr = email.toString()
-    const universityStr = university.toString()
-    const isUAEUniversityEmail = emailStr.endsWith(".ac.ae")
+    const isUAEUniversityEmail = emailStr.endsWith(".ac.ae") || emailStr.endsWith(".edu")
+    const isGmailOrCommon = ["gmail.com", "yahoo.com", "hotmail.com", "outlook.com"].some((domain) =>
+      emailStr.endsWith(domain),
+    )
 
-    // Try to store in Redis
+    // Check if email already exists
+    let emailExists = false
+    try {
+      const redis = createRedisClient()
+      if (redis) {
+        const existingEmails = await redis.smembers("pasttopass_waitlist_emails")
+        emailExists = existingEmails.includes(emailStr)
+      }
+    } catch (error) {
+      console.error("Error checking existing emails:", error)
+    }
+
+    if (emailExists) {
+      return {
+        success: false,
+        message: "📧 This email is already registered! You're already on our priority list.",
+      }
+    }
+
+    // Store in Redis
     let redisSuccess = false
     try {
       const redis = createRedisClient()
 
       if (redis) {
         // Store email in the waitlist set
-        await redis.sadd("essaytest_waitlist_emails", emailStr)
+        await redis.sadd("pasttopass_waitlist_emails", emailStr)
 
         // Store detailed user information
-        await redis.hset(`essaytest_user:${emailStr}`, {
+        await redis.hset(`pasttopass_user:${emailStr}`, {
+          name: nameStr,
           email: emailStr,
           university: universityStr,
           isUAEEmail: isUAEUniversityEmail ? "true" : "false",
+          isCommonEmail: isGmailOrCommon ? "true" : "false",
           joinedAt: new Date().toISOString(),
+          ipAddress: "hidden", // In production, you might want to log this
         })
 
         // Increment total count
-        await redis.incr("essaytest_total_signups")
+        await redis.incr("pasttopass_total_signups")
 
         console.log("✅ Successfully stored in Redis:", {
+          name: nameStr,
           email: emailStr,
           university: universityStr,
           timestamp: new Date().toISOString(),
         })
 
         redisSuccess = true
-      } else {
-        console.log("⚠️ Redis client not available")
       }
     } catch (redisError) {
       console.error("❌ Redis error:", redisError)
-      // Continue execution even if Redis fails
     }
 
-    // Get current count from Redis or use fallback
-    let count = 297 // Fallback count
+    // Get current count
+    let count = 297
     try {
       const redis = createRedisClient()
       if (redis) {
-        const redisCount = await redis.scard("essaytest_waitlist_emails")
+        const redisCount = await redis.scard("pasttopass_waitlist_emails")
         if (redisCount !== null) {
-          count = redisCount + 247 // Add base count
+          count = redisCount + 247
         }
       }
     } catch (countError) {
       console.error("Error getting count:", countError)
     }
 
+    // Generate success message based on email type
+    let successMessage = ""
+    if (isUAEUniversityEmail) {
+      successMessage =
+        "🎉 Welcome to PastToPass! You've been added to our PRIORITY list as a UAE university student. You'll be the first to know when we launch!"
+    } else if (isGmailOrCommon) {
+      successMessage =
+        "✅ Successfully registered for PastToPass! We've verified your email and you're now on our waitlist. Check your inbox for updates!"
+    } else {
+      successMessage =
+        "✅ Welcome to PastToPass! You've been successfully added to our waitlist. We'll notify you as soon as we're ready to launch!"
+    }
+
     return {
       success: true,
-      message: isUAEUniversityEmail
-        ? "🎉 Welcome! You've been added to our priority list as a UAE university student. We'll notify you first when EssayTest launches!"
-        : "✅ You've been added to the waitlist! We'll notify you as soon as EssayTest is ready for UAE students.",
+      message: successMessage,
       count,
       stored: redisSuccess,
+      emailType: isUAEUniversityEmail ? "uae" : isGmailOrCommon ? "common" : "other",
     }
   } catch (error) {
     console.error("❌ Server error:", error)
     return {
       success: false,
-      message: "An unexpected error occurred. Please try again.",
+      message: "❌ Something went wrong. Please check your internet connection and try again.",
     }
   }
 }
@@ -100,11 +189,11 @@ export async function getEssayTestWaitlistCount() {
   try {
     const redis = createRedisClient()
     if (redis) {
-      const count = await redis.scard("essaytest_waitlist_emails")
-      return (count || 0) + 247 // Add base count
+      const count = await redis.scard("pasttopass_waitlist_emails")
+      return (count || 0) + 247
     }
   } catch (error) {
     console.error("Error getting count:", error)
   }
-  return 297 // Fallback count
+  return 297
 }
