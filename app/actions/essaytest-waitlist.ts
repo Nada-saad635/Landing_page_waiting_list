@@ -1,6 +1,7 @@
 "use server"
 
 import { z } from "zod"
+import { createRedisClient } from "../lib/redis"
 
 const schema = z.object({
   email: z.string().email("Invalid email address"),
@@ -26,27 +27,68 @@ export async function joinEssayTestWaitlist(prevState: any, formData: FormData) 
     }
 
     const emailStr = email.toString()
+    const universityStr = university.toString()
     const isUAEUniversityEmail = emailStr.endsWith(".ac.ae")
 
-    // Log the submission (in production this would store in database)
-    console.log("Waitlist submission:", {
-      email: emailStr,
-      university: university.toString(),
-      timestamp: new Date().toISOString(),
-    })
+    // Try to store in Redis
+    let redisSuccess = false
+    try {
+      const redis = createRedisClient()
 
-    // Simulate getting count
-    const count = Math.floor(Math.random() * 50) + 250
+      if (redis) {
+        // Store email in the waitlist set
+        await redis.sadd("essaytest_waitlist_emails", emailStr)
+
+        // Store detailed user information
+        await redis.hset(`essaytest_user:${emailStr}`, {
+          email: emailStr,
+          university: universityStr,
+          isUAEEmail: isUAEUniversityEmail ? "true" : "false",
+          joinedAt: new Date().toISOString(),
+        })
+
+        // Increment total count
+        await redis.incr("essaytest_total_signups")
+
+        console.log("✅ Successfully stored in Redis:", {
+          email: emailStr,
+          university: universityStr,
+          timestamp: new Date().toISOString(),
+        })
+
+        redisSuccess = true
+      } else {
+        console.log("⚠️ Redis client not available")
+      }
+    } catch (redisError) {
+      console.error("❌ Redis error:", redisError)
+      // Continue execution even if Redis fails
+    }
+
+    // Get current count from Redis or use fallback
+    let count = 297 // Fallback count
+    try {
+      const redis = createRedisClient()
+      if (redis) {
+        const redisCount = await redis.scard("essaytest_waitlist_emails")
+        if (redisCount !== null) {
+          count = redisCount + 247 // Add base count
+        }
+      }
+    } catch (countError) {
+      console.error("Error getting count:", countError)
+    }
 
     return {
       success: true,
       message: isUAEUniversityEmail
-        ? "Welcome! You've been added to our priority list as a UAE university student."
-        : "You've been added to the waitlist! Check your email for confirmation.",
+        ? "🎉 Welcome! You've been added to our priority list as a UAE university student. We'll notify you first when EssayTest launches!"
+        : "✅ You've been added to the waitlist! We'll notify you as soon as EssayTest is ready for UAE students.",
       count,
+      stored: redisSuccess,
     }
   } catch (error) {
-    console.error("Error:", error)
+    console.error("❌ Server error:", error)
     return {
       success: false,
       message: "An unexpected error occurred. Please try again.",
@@ -55,6 +97,14 @@ export async function joinEssayTestWaitlist(prevState: any, formData: FormData) 
 }
 
 export async function getEssayTestWaitlistCount() {
-  // Return a static count for now
-  return 297
+  try {
+    const redis = createRedisClient()
+    if (redis) {
+      const count = await redis.scard("essaytest_waitlist_emails")
+      return (count || 0) + 247 // Add base count
+    }
+  } catch (error) {
+    console.error("Error getting count:", error)
+  }
+  return 297 // Fallback count
 }
