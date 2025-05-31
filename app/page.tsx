@@ -1,12 +1,10 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { getEssayTestWaitlistCount } from "./actions/essaytest-waitlist"
+import { useState } from "react"
 import { Header } from "./components/header"
 import { HeroSection } from "./components/hero-section"
 import { EssayTestWaitlistForm } from "./components/essaytest-waitlist-form"
 import { ValuePropositions } from "./components/value-propositions"
-import { Testimonials } from "./components/testimonials"
 import { Footer } from "./components/footer"
 import { Toaster } from "@/components/ui/toaster"
 
@@ -37,12 +35,8 @@ const backgroundStyle = `
 
 export default function Home() {
   const [language, setLanguage] = useState<"en" | "ar">("en")
-  const [waitlistCount, setWaitlistCount] = useState(0)
+  const [waitlistCount, setWaitlistCount] = useState(297)
   const [hasJoined, setHasJoined] = useState(false)
-
-  useEffect(() => {
-    getEssayTestWaitlistCount().then((count) => setWaitlistCount(count + 247)) // Adding base count for demo
-  }, [])
 
   const handleSuccess = (count: number) => {
     setWaitlistCount(count + 247)
@@ -100,7 +94,6 @@ export default function Home() {
         </div>
 
         <ValuePropositions language={language} />
-        <Testimonials language={language} />
         <Footer language={language} />
       </div>
 

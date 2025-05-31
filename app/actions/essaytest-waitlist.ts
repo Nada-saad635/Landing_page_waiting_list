@@ -2,20 +2,6 @@
 
 import { z } from "zod"
 
-const uaeUniversities = [
-  "American University of Sharjah (AUS)",
-  "United Arab Emirates University (UAEU)",
-  "American University of Dubai (AUD)",
-  "University of Dubai (UD)",
-  "Zayed University (ZU)",
-  "Khalifa University (KU)",
-  "Abu Dhabi University (ADU)",
-  "Ajman University (AU)",
-  "University of Sharjah (UOS)",
-  "Al Ghurair University (AGU)",
-  "Other",
-]
-
 const schema = z.object({
   email: z.string().email("Invalid email address"),
   university: z.string().min(1, "Please select your university"),
@@ -42,13 +28,14 @@ export async function joinEssayTestWaitlist(prevState: any, formData: FormData) 
     const emailStr = email.toString()
     const isUAEUniversityEmail = emailStr.endsWith(".ac.ae")
 
-    // Simulate storing data (in production this would use Redis)
-    console.log("Storing waitlist data:", { email: emailStr, university: university.toString() })
+    // Log the submission (in production this would store in database)
+    console.log("Waitlist submission:", {
+      email: emailStr,
+      university: university.toString(),
+      timestamp: new Date().toISOString(),
+    })
 
-    // Simulate email sending (in production this would use Resend)
-    console.log("Sending welcome email to:", emailStr)
-
-    // Simulate getting count (in production this would be from Redis)
+    // Simulate getting count
     const count = Math.floor(Math.random() * 50) + 250
 
     return {
@@ -68,8 +55,6 @@ export async function joinEssayTestWaitlist(prevState: any, formData: FormData) 
 }
 
 export async function getEssayTestWaitlistCount() {
-  // Simulate getting count from database
-  return Math.floor(Math.random() * 50) + 250
+  // Return a static count for now
+  return 297
 }
-
-export { uaeUniversities }
