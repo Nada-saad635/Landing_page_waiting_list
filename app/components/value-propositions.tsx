@@ -15,32 +15,27 @@ export function ValuePropositions({ language }: ValuePropositionsProps) {
         {
           icon: Database,
           title: "Organized Past Papers",
-          description:
-            "Access thousands of past exam questions organized by subject, semester, and difficulty level from major UAE universities.",
+          description: "Sorted by subject and difficulty.",
         },
         {
           icon: Brain,
           title: "AI-Powered Practice",
-          description:
-            "Get personalized practice questions generated specifically for your learning style and weak areas using advanced AI.",
+          description: "Personalized question sets.",
         },
         {
           icon: Zap,
           title: "Interactive Learning",
-          description:
-            "Step-by-step hints, video explanations, and progress tracking to accelerate your understanding and retention.",
+          description: "Step-by-step hints and video explanations.",
         },
         {
           icon: Users,
-          title: "Student Community",
-          description:
-            "Connect with fellow UAE university students, share resources, and learn together in a collaborative environment.",
+          title: "Community Support",
+          description: "Connect with fellow UAE students.",
         },
         {
           icon: Globe,
           title: "UAE-Focused Content",
-          description:
-            "Built specifically for UAE students with local university alignment, bilingual support, and cultural understanding.",
+          description: "Built specifically for UAE university curriculum.",
         },
       ],
     },
@@ -51,29 +46,27 @@ export function ValuePropositions({ language }: ValuePropositionsProps) {
         {
           icon: Database,
           title: "أوراق سابقة منظمة",
-          description:
-            "الوصول إلى آلاف أسئلة الامتحانات السابقة منظمة حسب المادة والفصل الدراسي ومستوى الصعوبة من الجامعات الإماراتية الرئيسية.",
+          description: "مصنفة حسب الموضوع والصعوبة.",
         },
         {
           icon: Brain,
           title: "التدريب المدعوم بالذكاء الاصطناعي",
-          description:
-            "احصل على أسئلة تدريب مخصصة تم إنشاؤها خصيصاً لأسلوب تعلمك ونقاط ضعفك باستخدام الذكاء الاصطناعي المتقدم.",
+          description: "مجموعات أسئلة مخصصة.",
         },
         {
           icon: Zap,
           title: "التعلم التفاعلي",
-          description: "تلميحات خطوة بخطوة وشروحات فيديو وتتبع التقدم لتسريع فهمك واستيعابك.",
+          description: "تلميحات خطوة بخطوة وشروحات فيديو.",
         },
         {
           icon: Users,
-          title: "مجتمع الطلاب",
-          description: "تواصل مع زملائك طلاب الجامعات الإماراتية، وشارك الموارد، وتعلم معاً في بيئة تعاونية.",
+          title: "دعم المجتمع",
+          description: "تواصل مع زملائك طلاب الإمارات.",
         },
         {
           icon: Globe,
           title: "محتوى مركز على الإمارات",
-          description: "مصمم خصيصاً لطلاب الإمارات مع التوافق مع الجامعات المحلية والدعم ثنائي اللغة والفهم الثقافي.",
+          description: "مصمم خصيصاً لمناهج الجامعات الإماراتية.",
         },
       ],
     },

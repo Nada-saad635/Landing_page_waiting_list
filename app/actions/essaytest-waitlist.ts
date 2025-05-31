@@ -6,7 +6,6 @@ import { createRedisClient } from "../lib/redis"
 const schema = z.object({
   email: z.string().email("Please enter a valid email address"),
   university: z.string().min(1, "Please select your university"),
-  name: z.string().min(2, "Please enter your full name (at least 2 characters)"),
 })
 
 // Simple email validation function
@@ -48,15 +47,13 @@ export async function joinEssayTestWaitlist(prevState: any, formData: FormData) 
 
     const email = formData.get("email")
     const university = formData.get("university")
-    const name = formData.get("name")
 
-    if (!email || !university || !name) {
-      return { success: false, message: "Name, email and university are required" }
+    if (!email || !university) {
+      return { success: false, message: "Email and university are required" }
     }
 
     const emailStr = email.toString().toLowerCase().trim()
     const universityStr = university.toString()
-    const nameStr = name.toString().trim()
 
     // Validate email format
     if (!isValidEmailFormat(emailStr)) {
@@ -76,7 +73,7 @@ export async function joinEssayTestWaitlist(prevState: any, formData: FormData) 
       }
     }
 
-    const result = schema.safeParse({ email: emailStr, university: universityStr, name: nameStr })
+    const result = schema.safeParse({ email: emailStr, university: universityStr })
 
     if (!result.success) {
       return { success: false, message: result.error.errors[0].message }
@@ -117,7 +114,6 @@ export async function joinEssayTestWaitlist(prevState: any, formData: FormData) 
 
         // Store detailed user information
         await redis.hset(`pasttopass_user:${emailStr}`, {
-          name: nameStr,
           email: emailStr,
           university: universityStr,
           isUAEEmail: isUAEUniversityEmail ? "true" : "false",
@@ -130,7 +126,6 @@ export async function joinEssayTestWaitlist(prevState: any, formData: FormData) 
         await redis.incr("pasttopass_total_signups")
 
         console.log("✅ Successfully stored in Redis:", {
-          name: nameStr,
           email: emailStr,
           university: universityStr,
           timestamp: new Date().toISOString(),

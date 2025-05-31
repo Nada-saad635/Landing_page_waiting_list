@@ -8,15 +8,13 @@ export function HeroSection({ language }: HeroSectionProps) {
   const content = {
     en: {
       headline: "Transform Past Papers Into Future Success",
-      subheadline:
-        "Join thousands of UAE university students who are mastering their exams with PastToPass - the smart way to study with past papers",
+      subheadline: "Join thousands of students preparing smarter with curated questions from previous years",
       description:
         "Access organized past exam questions, get AI-powered practice, and connect with fellow UAE students. Turn yesterday's papers into tomorrow's success.",
     },
     ar: {
       headline: "حول الأوراق السابقة إلى نجاح مستقبلي",
-      subheadline:
-        "انضم إلى آلاف طلاب الجامعات الإماراتية الذين يتقنون امتحاناتهم مع باست تو باس - الطريقة الذكية للدراسة بالأوراق السابقة",
+      subheadline: "انضم إلى آلاف الطلاب الذين يستعدون بشكل أذكى مع أسئلة منسقة من السنوات السابقة",
       description:
         "احصل على أسئلة الامتحانات السابقة المنظمة، والتدريب المدعوم بالذكاء الاصطناعي، وتواصل مع زملائك الطلاب الإماراتيين. حول أوراق الأمس إلى نجاح الغد.",
     },
