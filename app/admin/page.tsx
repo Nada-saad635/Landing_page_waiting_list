@@ -1,6 +1,7 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -20,16 +21,30 @@ export default function AdminPage() {
   const [emailDetails, setEmailDetails] = useState<EmailDetail[]>([])
   const [password, setPassword] = useState("")
   const [authenticated, setAuthenticated] = useState(false)
+  const router = useRouter()
   const { toast } = useToast()
+
+  useEffect(() => {
+    // Check if authenticated
+    const isAuthenticated = localStorage.getItem("adminAuthenticated") === "true"
+
+    // Redirect to dashboard if authenticated, otherwise stay on this page
+    // which will render the login form
+    if (isAuthenticated) {
+      router.push("/admin/dashboard")
+    }
+  }, [router])
 
   // Simple authentication
   const checkPassword = () => {
     if (password === "essaytest2024") {
       setAuthenticated(true)
+      localStorage.setItem("adminAuthenticated", "true")
       toast({
         title: "✅ Authenticated",
         description: "Welcome to the EssayTest admin dashboard",
       })
+      router.push("/admin/dashboard")
     } else {
       toast({
         title: "❌ Authentication failed",
